@@ -1,4 +1,5 @@
 import time
+import tkinter
 from tkinter import *
 import serial
 import array
@@ -59,7 +60,46 @@ def clicked():
 
 
 def sended():
+    global voltage
+
+    for i in range(1, 60):
+
+        ser.write(serial.to_bytes([0x55, 0x55, 0x00, 0x00, 0xAA]))
+        # time.sleep(1)
+        if (ser.in_waiting > 0):
+            serialString = ser.read()
+            lst[i] = None
+            lst[i] = serialString
+
+    print(lst)
+    filtered_list = list(filter(None, lst))
+    print(filtered_list)
+    result = filtered_list[35].hex() + filtered_list[34].hex()
+    print(filtered_list[35])
+    print(filtered_list[34])
+    print(result)
+    print("hex: " + filtered_list[35].hex() + " " +filtered_list[34].hex())
+    string_list = list(result)
+    if (string_list[0] == '0'):
+        string_list[0] = '0x'
+    else:
+        string_list[0] = '0x' + string_list[0]
+
+    hex_result = "".join(string_list)
+
+    an_integer = int(hex_result, 16)
+    hex_value = hex(an_integer)
+
+    hex_int = int(hex_value, 16)
+
+    voltage = hex_int / 10000
+    txt.delete(0, tkinter.END)
     txt.insert(0, str(voltage)+"V")
+    filtered_list = 0
+
+    print(filtered_list)
+    print(lst)
+
 
 btn = Button(window, text="Send", command=clicked)
 
