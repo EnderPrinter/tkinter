@@ -64,11 +64,10 @@ def clicked():
 
 def sended():
     global voltage
-
+    ser.write(serial.to_bytes([0x55, 0x55, 0x00, 0x00, 0xAA]))
+    time.sleep(1)
     for i in range(1, 60):
 
-        ser.write(serial.to_bytes([0x55, 0x55, 0x00, 0x00, 0xAA]))
-        # time.sleep(1)
         if (ser.in_waiting > 0):
             serialString = ser.read()
             lst[i] = None
@@ -94,11 +93,16 @@ def sended():
     hex_value = hex(an_integer)
 
     hex_int = int(hex_value, 16)
-
-    voltage = hex_int / 10000
+    if (str(filtered_list[37].hex()) == "08"):
+        voltage = hex_int / 10000
+    elif (str(filtered_list[37].hex()) == "04"):
+        voltage = hex_int / 1000
     txt.delete(0, tkinter.END)
-    txt.insert(0, str(voltage)+"V")
-    filtered_list = 0
+    if (str(filtered_list[36].hex()) == "80"):
+        txt.insert(0, "-" + str(voltage)+"V")
+    else:
+        txt.insert(0, str(voltage) + "V")
+    #filtered_list = 0
 
     print(filtered_list)
     print(lst)
