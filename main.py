@@ -1,5 +1,14 @@
-#not working
 
+range_dict = {
+  '01': 'V',
+  '02': 'mV',
+  '03': 'A',
+  '04': 'mA',
+  '0c': 'MOhm',
+  '0a': 'Ohm',
+  '0b': 'KOhm',
+
+}
 
 import time
 import tkinter
@@ -22,7 +31,7 @@ window.geometry('840x640')
 
 #lbl.grid(column=0, row=0)
 
-txt = Entry(window,width=10)
+txt = Entry(window,width=15)
 
 txt.grid(column=4, row=0)
 
@@ -93,26 +102,39 @@ def sended():
     hex_value = hex(an_integer)
 
     hex_int = int(hex_value, 16)
+
     if (str(filtered_list[37].hex()) == "08"):
         voltage = hex_int / 10000
     elif (str(filtered_list[37].hex()) == "04"):
         voltage = hex_int / 1000
+    elif (str(filtered_list[37].hex()) == "00"):
+        voltage = hex_int
+    elif (str(filtered_list[37].hex()) == "02"):
+        voltage = hex_int / 100
+    elif (str(filtered_list[37].hex()) == "01"):
+        voltage = hex_int / 10
+
     txt.delete(0, tkinter.END)
-    if (str(filtered_list[36].hex()) == "80"):
-        txt.insert(0, "-" + str(voltage)+"V")
+    if (str(filtered_list[36].hex()) == '80'):
+        unit = filtered_list[38].hex()
+        text = str("-" + str(voltage) + str(range_dict[unit]))
+        txt.insert(0, text)
     else:
-        txt.insert(0, str(voltage) + "V")
+        unit = filtered_list[38].hex()
+        text = str(str(voltage) + str(range_dict[unit]))
+        txt.insert(0, text)
     #filtered_list = 0
 
     print(filtered_list)
     print(lst)
+    print(voltage)
 
 
 btn = Button(window, text="Send", command=clicked)
 
 btn.grid(column=2, row=0)
 
-btn2 = Button(window, text="voltage", command=sended)
+btn2 = Button(window, text="get value", command=sended)
 
 btn2.grid(column=3, row=0)
 
