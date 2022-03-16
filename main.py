@@ -76,7 +76,15 @@ def clicked():
 
 def timing():
     res = txtTime.get()
+    unit = res[-1]
     res = res[:-1]
+    print (unit)
+    print(res)
+    if (unit == "m"):
+        res = int(res) * 60
+        print (res)
+    elif (unit == "h"):
+        res = int(res) * 60 * 60
     while True:
         global voltage
         ser.write(serial.to_bytes([0x55, 0x55, 0x00, 0x00, 0xAA]))
